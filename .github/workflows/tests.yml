@@ -41,3 +41,13 @@ jobs:
 
       - name: Run tests
         run: dotnet test Cilsil.Test/Cilsil.Test.csproj --logger "console;verbosity=normal"
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            Cilsil.Test/bin/Debug/net6.0/artifacts/**/TestCode.cs
+            Cilsil.Test/bin/Debug/net6.0/artifacts/**/infer-out/report.json
+          if-no-files-found: ignore
