@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  INFER_VERSION: v1.3.0
+  INFER_VERSION: v1.1.0
 
 jobs:
   test:
@@ -26,13 +26,16 @@ jobs:
       - name: Download Infer
         env:
           GH_TOKEN: ${{ github.token }}
+        # The Linux package is named infer-linux64-* up to v1.1.0 and
+        # infer-linux-x86_64-* from v1.2.0.
         run: |
           gh release download "$INFER_VERSION" \
             --repo facebook/infer \
-            --pattern "infer-linux-x86_64-$INFER_VERSION.tar.xz" \
-            --dir "$RUNNER_TEMP"
-          tar -xJf "$RUNNER_TEMP/infer-linux-x86_64-$INFER_VERSION.tar.xz" -C "$RUNNER_TEMP"
-          echo "$RUNNER_TEMP/infer-linux-x86_64-$INFER_VERSION/bin" >> "$GITHUB_PATH"
+            --pattern "infer-linux*-$INFER_VERSION.tar.xz" \
+            --output "$RUNNER_TEMP/infer.tar.xz"
+          mkdir "$RUNNER_TEMP/infer"
+          tar -xJf "$RUNNER_TEMP/infer.tar.xz" -C "$RUNNER_TEMP/infer" --strip-components=1
+          echo "$RUNNER_TEMP/infer/bin" >> "$GITHUB_PATH"
 
       - name: Check tools
         run: |
