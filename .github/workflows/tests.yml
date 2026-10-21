@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 6.0.x
+          global-json-file: global.json
 
       - name: Download Infer
         env:
@@ -34,8 +34,10 @@ jobs:
           tar -xJf "$RUNNER_TEMP/infer-linux-x86_64-$INFER_VERSION.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/infer-linux-x86_64-$INFER_VERSION/bin" >> "$GITHUB_PATH"
 
-      - name: Check Infer
-        run: infer --version
+      - name: Check tools
+        run: |
+          dotnet --version
+          infer --version
 
       - name: Run tests
         run: dotnet test Cilsil.Test/Cilsil.Test.csproj --logger "console;verbosity=normal"
