@@ -895,20 +895,23 @@ namespace Cilsil.Test.E2E
         /// <param name="input">If the input character is not 'a', 'b', or 'c', then a null
         /// dereference occurs.</param>
         /// <param name="expectedError">The expected error.</param>
-        [DataRow('a', InferError.None)]
-        [DataRow('b', InferError.None)]
-        [DataRow('c', InferError.None)]
-        [DataRow('d', InferError.NULL_DEREFERENCE)]
+        [DataRow("'a'", InferError.None)]
+        [DataRow("'b'", InferError.None)]
+        [DataRow("'c'", InferError.None)]
+        [DataRow("'d'", InferError.NULL_DEREFERENCE)]
         [DataTestMethod]
         public void NullExceptionTestSwitch(string input, InferError expectedError)
         {
-            TestRunManager.Run(CallTestClassMethod(
-                                   TestClassMethod.SwitchStatementReturnsString,
-                                   true,
-                                   args: new string[]
-                                   {
-                                       input
-                                   }), GetString(expectedError));
+            TestRunManager.Run(InitVars(firstLocalVarType: VarType.String,
+                                        firstLocalVarValue: CallTestClassMethod(
+                                            TestClassMethod.SwitchStatementReturnsString,
+                                            false,
+                                            args: new string[]
+                                            {
+                                                input
+                                            })) +
+                                   DerefObject(VarName.FirstLocal),
+                               GetString(expectedError));
         }
     }
 }
