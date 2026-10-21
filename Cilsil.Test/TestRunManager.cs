@@ -189,9 +189,11 @@ namespace Cilsil.Test
             Directory.CreateDirectory(Path.Combine(InferOutFolder, "captured"));
             RunCommand(
                 "infer",
-                $"run --debug --cfg-json {cfgJson} --tenv-json {tenvJson} " +
-                $"--enable-issue-type CLASS_CAST_EXCEPTION " +
-                $"--enable-issue-type PULSE_RESOURCE_LEAK ",
+                $"analyzejson --debug --cfg-json {cfgJson} --tenv-json {tenvJson} " +
+                $"--biabduction --dotnet-resource-leak --no-pulse " +
+                $"--enable-issue-type NULL_DEREFERENCE " +
+                $"--enable-issue-type DOTNET_RESOURCE_LEAK " +
+                $"--enable-issue-type CLASS_CAST_EXCEPTION",
                 out stdout,
                 out stderr);
             Trace.TraceError($"\nInfer stderr: \n{stderr}");
